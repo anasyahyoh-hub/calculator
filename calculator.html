@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <title>เครื่องคิดเลข</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#e0ecf8">
+    <meta name="description" content="เครื่องคิดเลขสำหรับบวก ลบ คูณ หาร เปอร์เซ็นต์ ยกกำลัง ราก และลอการิทึม">
+    <script src="calculator.js" defer></script>
+    <link rel="stylesheet" href="calculator.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500&family=Oswald:wght@500&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <main class="calculator" aria-label="เครื่องคิดเลขวิทยาศาสตร์">
+        <!-- Display Screen -->
+        <section class="screen" aria-label="หน้าจอคำนวณ">
+            <input type="text" class="display" id="hisDisplay" readonly aria-label="ประวัติการคำนวณล่าสุด 1 รายการ">
+            <input type="text" class="display" id="preDisplay" readonly aria-label="สูตรหรือข้อความแจ้งข้อผิดพลาด">
+            <output class="display" id="Display" aria-label="ผลลัพธ์" aria-live="polite" aria-atomic="true"
+                aria-describedby="preDisplay" tabindex="0">0</output>
+        </section>
+
+        <!-- Buttons -->
+        <section class="buttons-container" aria-label="ปุ่มเครื่องคิดเลข">
+
+            <!-- Scientific panel -->
+            <div class="scientific-panel" role="group" aria-label="ฟังก์ชันวิทยาศาสตร์">
+                <button type="button" data-action="square" aria-label="ยกกำลังสอง">X<sup>2</sup></button>
+                <button type="button" data-action="sqrt2" aria-label="รากที่สอง">√X</button>
+
+                <button type="button" data-action="cube" aria-label="ยกกำลังสาม">X<sup>3</sup></button>
+                <button type="button" data-action="sqrt3" aria-label="รากที่สาม">∛X</button>
+
+                <button type="button" data-action="pow" title="ใส่ฐาน กดปุ่มนี้ แล้วใส่เลขชี้กำลัง เช่น 2 → Xʸ → 3 → ="
+                    aria-label="ยกกำลังตามที่กำหนด">X<sup>y</sup></button>
+                <button type="button" data-action="sqrty"
+                    title="ใส่จำนวน กดปุ่มนี้ แล้วใส่อันดับราก เช่น 27 → ʸ√X → 3 → ="
+                    aria-label="รากอันดับที่กำหนด"><sup>y</sup>√X</button>
+
+                <button type="button" data-action="pow10" aria-label="สิบยกกำลัง x">10<sup>x</sup></button>
+                <button type="button" data-action="exp" aria-label="e ยกกำลัง x">e<sup>x</sup></button>
+
+                <button type="button" data-action="ln" aria-label="ลอการิทึมธรรมชาติ">ln</button>
+                <button type="button" data-action="log10" aria-label="ลอการิทึมฐานสิบ">log<sub>10</sub></button>
+            </div>
+
+            <!-- Basic panel -->
+            <div class="basic-panel" role="group" aria-label="การคำนวณพื้นฐาน">
+                <!-- Row 1: control -->
+                <button type="button" class="btn-del" data-action="del" aria-label="ลบหลักสุดท้าย">DEL</button>
+                <button type="button" class="btn-clear" data-action="clear" aria-label="ล้างการคำนวณปัจจุบัน">C</button>
+                <button type="button" class="btn-util" data-action="percent"
+                    title="บวกหรือลบ: คิดเปอร์เซ็นต์ของจำนวนแรก ส่วนคูณหรือหาร: แปลงเปอร์เซ็นต์เป็นเศษส่วน"
+                    aria-label="เปอร์เซ็นต์">%</button>
+                <button type="button" class="btn-operator" data-action="operator" data-value="/"
+                    aria-label="หาร">÷</button>
+
+                <!-- Row 2 -->
+                <button type="button" class="btn-digit" data-action="digit" data-value="7">7</button>
+                <button type="button" class="btn-digit" data-action="digit" data-value="8">8</button>
+                <button type="button" class="btn-digit" data-action="digit" data-value="9">9</button>
+                <button type="button" class="btn-operator" data-action="operator" data-value="*"
+                    aria-label="คูณ">×</button>
+
+                <!-- Row 3 -->
+                <button type="button" class="btn-digit" data-action="digit" data-value="4">4</button>
+                <button type="button" class="btn-digit" data-action="digit" data-value="5">5</button>
+                <button type="button" class="btn-digit" data-action="digit" data-value="6">6</button>
+                <button type="button" class="btn-operator" data-action="operator" data-value="-"
+                    aria-label="ลบ">−</button>
+
+                <!-- Row 4 -->
+                <button type="button" class="btn-digit" data-action="digit" data-value="1">1</button>
+                <button type="button" class="btn-digit" data-action="digit" data-value="2">2</button>
+                <button type="button" class="btn-digit" data-action="digit" data-value="3">3</button>
+                <button type="button" class="btn-operator" data-action="operator" data-value="+"
+                    aria-label="บวก">+</button>
+
+                <!-- Row 5 -->
+                <button type="button" class="btn-util" data-action="negate"
+                    aria-label="สลับเครื่องหมายบวกลบ">+/−</button>
+                <button type="button" class="btn-digit" data-action="digit" data-value="0">0</button>
+                <button type="button" class="btn-digit" data-action="decimal" aria-label="จุดทศนิยม">.</button>
+                <button type="button" class="btn-equals" data-action="equals" aria-label="คำนวณผลลัพธ์">=</button>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="credits" aria-labelledby="credits-title">
+        <div class="credits-grid">
+            <div class="credit-section">
+                <span class="name-head">PISIT</span>
+                <span class="fullname">Pisit Saman</span>
+                <span class="student-id">6720310013</span>
+            </div>
+            <div class="credit-section">
+                <span class="name-head">WARIS</span>
+                <span class="fullname">Waris Domden</span>
+                <span class="student-id">6720310017</span>
+            </div>
+            <div class="credit-section">
+                <span class="name-head">ANAS</span>
+                <span class="fullname">Anas Yahyoh</span>
+                <span class="student-id">6720310020</span>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

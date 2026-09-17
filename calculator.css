@@ -1,0 +1,679 @@
+/* Liquid Glass — translucent surfaces with a blue accent. */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root {
+    color-scheme: light;
+    --blue: rgb(0, 106, 255);
+    --blue-deep: #0057da;
+    --ink: #20364f;
+    --muted: #526a83;
+    --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Prompt', sans-serif;
+    --gap: 10px;
+    --button-height: 62px;
+    font-family: var(--font);
+    font-synthesis: none;
+    color: var(--ink);
+    background: #dce9f6;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 40px 24px;
+    position: relative;
+    isolation: isolate;
+    background:
+        radial-gradient(ellipse at 14% 14%, #f4faff 0%, transparent 46%),
+        radial-gradient(ellipse at 92% 22%, #9fcef9 0%, transparent 42%),
+        radial-gradient(ellipse at 20% 94%, #74b5f0 0%, transparent 43%),
+        linear-gradient(130deg, #e6f1fa 12%, #dce6f6 57%, #e8edf8);
+}
+
+/* Broad, abstract color fields remain visible through the glass. */
+body::before,
+body::after {
+    content: '';
+    position: fixed;
+    z-index: -1;
+    pointer-events: none;
+}
+
+body::before {
+    width: 95vmax;
+    height: 49vmax;
+    left: -23vmax;
+    bottom: -24vmax;
+    border-radius: 50%;
+    transform: rotate(-26deg);
+    background: linear-gradient(165deg, #9bdbff 2%, #64b6f8 27%, #2178e8 56%, #006aff 76%, #72baf8 100%);
+    box-shadow:
+        0 -2px 4px #f7ffffc9,
+        0 -24px 90px #e6f8ffb3,
+        inset 0 16px 50px #e6f7ff88;
+}
+
+body::after {
+    width: 75vmax;
+    height: 38vmax;
+    right: -27vmax;
+    top: -23vmax;
+    border-radius: 50%;
+    transform: rotate(-28deg);
+    background: linear-gradient(155deg, #a1d5ff 5%, #e2edff 58%, #edf7ff);
+    box-shadow: 0 2px 4px #ffffffb3, 0 40px 90px #6b9cc13b, inset 0 -5px 30px #fff;
+}
+
+.calculator {
+    position: relative;
+    width: min(100%, 710px);
+    padding: 20px;
+    flex-shrink: 0;
+    border: 1px solid #ffffffe6;
+    border-radius: 38px;
+    background: linear-gradient(145deg, #ffffff7a 0%, #eff8ff52 45%, #dbeaff63 100%);
+    -webkit-backdrop-filter: blur(36px) saturate(165%);
+    backdrop-filter: blur(36px) saturate(165%);
+    box-shadow:
+        0 30px 80px -24px #244b7961,
+        0 8px 24px -12px #345d8066,
+        inset 0 1px 1px #fff,
+        inset 0 -1px 2px #ffffffb3,
+        inset 1px 0 1px #fff9;
+    animation: glass-appear .55s ease-out both;
+}
+
+/* An inset contour gives the shell a polished, rounded edge. */
+.calculator::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border: 1px solid #ffffff66;
+    border-radius: 34px;
+    pointer-events: none;
+}
+
+.calculator-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 2px 5px 20px;
+}
+
+.calculator-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.calculator-title h1 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -.35px;
+}
+
+.app-icon {
+    display: grid;
+    place-items: center;
+    width: 35px;
+    height: 35px;
+    flex-shrink: 0;
+    color: var(--blue);
+    border: 1px solid #fff;
+    border-radius: 12px;
+    background: linear-gradient(140deg, #ffffffe6, #e2efff80);
+    box-shadow: inset 0 1px 0 #fff, 0 3px 8px #3b6f9b12;
+}
+
+.app-icon svg {
+    width: 23px;
+    height: 23px;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.mode-label {
+    flex-shrink: 0;
+    padding: 7px 12px;
+    border: 1px solid #ffffffb3;
+    border-radius: 100px;
+    background: #ffffff42;
+    box-shadow: inset 0 1px 0 #ffffffb3;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 174px;
+    gap: 3px;
+    padding: 18px 24px 14px;
+    margin-bottom: 20px;
+    border: 1px solid #ffffffbd;
+    border-radius: 24px;
+    background: linear-gradient(150deg, #f8fcff36, #fff9 65%, #e9f3ff5c);
+    box-shadow:
+        inset 0 2px 5px #6384a610,
+        inset 0 -1px 0 #fff,
+        0 1px 0 #ffffff6b;
+}
+
+.display {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 5px;
+    outline: none;
+    background: transparent;
+    color: var(--ink);
+    font-family: var(--font);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #749cbe80 transparent;
+    caret-color: transparent;
+    user-select: text;
+}
+
+#hisDisplay {
+    min-height: 24px;
+    color: #526b84;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+#preDisplay {
+    min-height: 25px;
+    color: #315b90;
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+#Display {
+    min-height: 71px;
+    font-size: clamp(42px, 7vw, 62px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -2.5px;
+    text-shadow: 0 1px 0 #ffffffa6;
+}
+
+.display.error {
+    color: #b02a3b;
+    font-size: 36px !important;
+    letter-spacing: -.8px !important;
+}
+
+.buttons-container {
+    display: flex;
+    align-items: stretch;
+    gap: 19px;
+}
+
+.scientific-panel,
+.basic-panel {
+    display: grid;
+    gap: var(--gap);
+    min-width: 0;
+}
+
+.scientific-panel {
+    flex: 0 0 30%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-right: 18px;
+    position: relative;
+}
+
+.scientific-panel::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    right: 0;
+    width: 1px;
+    background: linear-gradient(transparent, #6e9ecb3b 20%, #ffffffc7 80%, transparent);
+}
+
+.basic-panel {
+    flex: 1;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+button {
+    position: relative;
+    isolation: isolate;
+    min-width: 0;
+    min-height: var(--button-height);
+    padding: 5px 4px;
+    border: 1px solid #ffffffbd;
+    border-radius: 21px;
+    outline: none;
+    overflow: hidden;
+    font-family: var(--font);
+    font-size: 23px;
+    font-weight: 400;
+    color: var(--ink);
+    background: linear-gradient(155deg, #ffffffe0 0%, #ffffff70 45%, #f3f9ff8c 100%);
+    box-shadow:
+        inset 0 1px 1px #fff,
+        inset 0 -1px 1px #ffffff80,
+        0 3px 6px #3866910e,
+        0 1px 2px #3154710f;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(125deg, #ffffff40, transparent 45%);
+    pointer-events: none;
+}
+
+button sup,
+button sub {
+    font-size: .65em;
+    line-height: 0;
+}
+
+.scientific-panel button {
+    background: linear-gradient(155deg, #e7f2ff99, #e0ecfa54);
+    color: #315679;
+    font-size: 17px;
+}
+
+.btn-del,
+.btn-clear,
+.btn-util {
+    color: #365777;
+    background: linear-gradient(145deg, #e4edfaad, #dce8f666);
+    font-size: 19px;
+}
+
+.btn-del {
+    font-size: 15px;
+    letter-spacing: .3px;
+}
+
+.btn-clear {
+    color: #134c88;
+    font-weight: 500;
+}
+
+.btn-operator {
+    color: #0861c8;
+    font-size: 28px;
+    background: linear-gradient(155deg, #cae4ffe0, #bddcfc66);
+    border-color: #eff8ffd9;
+}
+
+.btn-equals {
+    color: #fff;
+    font-size: 30px;
+    background: linear-gradient(150deg, #419bff, var(--blue) 62%, #005bdf);
+    border-color: #69adff;
+    box-shadow:
+        inset 0 1px 1px #ffffff80,
+        inset 0 -1px 2px #003f944d,
+        0 5px 14px #006aff38;
+    text-shadow: 0 1px 2px #0049b340;
+}
+
+@media (hover: hover) {
+    button:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(155deg, #fff, #ffffffab);
+        box-shadow: inset 0 1px 1px #fff, 0 6px 15px #3264921c;
+    }
+
+    .btn-operator:hover,
+    .scientific-panel button:hover {
+        background: linear-gradient(145deg, #eef8ff, #d2e7ffb3);
+    }
+
+    .btn-equals:hover {
+        background: linear-gradient(145deg, #55a5ff, #006aff);
+        box-shadow: inset 0 1px 1px #ffffffb3, 0 8px 20px #006aff42;
+    }
+}
+
+button:active {
+    transform: scale(.95);
+    box-shadow: inset 0 2px 5px #50769924, inset 0 -1px 0 #fff;
+}
+
+button.active-op {
+    color: #0058c4;
+    background: linear-gradient(145deg, #f0f8ff, #b8d9ff);
+    border-color: #006aff99;
+    box-shadow: inset 0 1px 1px #fff, 0 0 0 2px #006aff26, 0 3px 9px #006aff1f;
+}
+
+button:focus-visible,
+.display:focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 3px;
+}
+
+.hint-separator {
+    padding: 0 7px;
+    opacity: .7;
+}
+
+@keyframes glass-appear {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.credits {
+    width: min(100%, 710px);
+    padding: 20px 24px 24px;
+    border: 1px solid #ffffffe0;
+    border-radius: 28px;
+    background: linear-gradient(145deg, #ffffffc7, #eaf4ffad);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: inset 0 1px 1px #fff, 0 12px 32px -18px #244b7959;
+}
+
+.credits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.credit-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    gap: 5px;
+    padding: 0 12px;
+    text-align: center;
+}
+
+.credit-section+.credit-section {
+    border-left: 1px solid #527dac26;
+}
+
+.name-head {
+    margin-bottom: 3px;
+    color: #235584;
+    font-family: 'Oswald', var(--font);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: .1em;
+    text-shadow: 0 1px 0 #ffffffa6;
+}
+
+.fullname,
+.student-id {
+    max-width: 100%;
+    font-family: 'Noto Sans Thai', var(--font);
+    font-weight: 400;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.fullname {
+    color: var(--ink);
+    font-size: 14px;
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+.student-id {
+    color: #4d6580;
+    font-size: 12px;
+    font-family: "Noto Sans Thai", sans-serif;
+}
+
+@media (max-width: 560px) {
+    :root {
+        --gap: 7px;
+        --button-height: 54px;
+    }
+
+    body {
+        padding: 24px 12px;
+        gap: 18px;
+    }
+
+    .calculator {
+        padding: 15px;
+        border-radius: 30px;
+    }
+
+    .calculator::before {
+        border-radius: 26px;
+    }
+
+    .calculator-header {
+        padding: 2px 3px 16px;
+        gap: 10px;
+    }
+
+    .calculator-title {
+        gap: 8px;
+    }
+
+    .calculator-title h1 {
+        font-size: 15px;
+    }
+
+    .app-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+    }
+
+    .mode-label {
+        padding: 5px 9px;
+    }
+
+    .screen {
+        min-height: 152px;
+        padding: 14px 16px 10px;
+        border-radius: 20px;
+        margin-bottom: 16px;
+    }
+
+    #Display {
+        min-height: 63px;
+        font-size: 50px;
+    }
+
+    .buttons-container {
+        gap: 10px;
+    }
+
+    .scientific-panel {
+        flex-basis: 30%;
+        padding-right: 0;
+    }
+
+    .scientific-panel::after {
+        display: none;
+    }
+
+    button {
+        border-radius: 17px;
+        font-size: 20px;
+    }
+
+    .scientific-panel button {
+        font-size: 14px;
+    }
+
+    .btn-del {
+        font-size: 12px;
+        letter-spacing: 0;
+    }
+
+    .btn-clear,
+    .btn-util {
+        font-size: 16px;
+    }
+
+    .btn-operator,
+    .btn-equals {
+        font-size: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .credits {
+        padding: 17px 20px 8px;
+        border-radius: 24px;
+    }
+
+    .credits-title {
+        justify-content: flex-start;
+        margin-bottom: 4px;
+    }
+
+    .credits-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .credit-section {
+        display: grid;
+        grid-template-columns: 88px minmax(0, 1fr);
+        gap: 1px 12px;
+        padding: 13px 0;
+        text-align: left;
+    }
+
+    .credit-section+.credit-section {
+        border-left: 0;
+        border-top: 1px solid #527dac26;
+    }
+
+    .name-head {
+        grid-row: span 2;
+        margin: 0;
+        font-size: 21px;
+    }
+
+    .fullname,
+    .student-id {
+        text-align: right;
+    }
+}
+
+@media (max-width: 360px) {
+    :root {
+        --gap: 5px;
+        --button-height: 49px;
+    }
+
+    body {
+        padding: 18px 8px;
+    }
+
+    .calculator {
+        padding: 11px;
+    }
+
+    .mode-label {
+        padding: 5px 7px;
+        font-size: 11px;
+    }
+
+    .calculator-title h1 {
+        font-size: 14px;
+    }
+
+    .buttons-container {
+        gap: 8px;
+    }
+
+    .scientific-panel {
+        flex-basis: 31%;
+    }
+
+    button {
+        border-radius: 15px;
+    }
+
+    .scientific-panel button {
+        font-size: 13px;
+    }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+
+    .calculator,
+    .credits {
+        background: #e8f1fa;
+    }
+
+    button {
+        background-color: #edf5fd;
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+
+    .calculator,
+    .credits {
+        background: #e8f1fa;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+
+    button {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    button:hover,
+    button:active {
+        transform: none;
+    }
+}
